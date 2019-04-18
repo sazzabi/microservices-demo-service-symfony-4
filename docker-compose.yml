@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  service_web:
+    image: sazzabi/web
+    container_name: service_web
+    env_file:
+      - .env
+    volumes:
+      - .:${PROJECT_DIR}
+    working_dir: ${PROJECT_DIR}
+    ports:
+      - 8001:80
+    depends_on:
+      - service_php
+      - service_db
+
+  service_php:
+    image: sazzabi/php
+    container_name: service_php
+    env_file:
+      - .env
+    volumes:
+      - .:${PROJECT_DIR}
+    working_dir: ${PROJECT_DIR}
+
+  service_db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    volumes:
+      - ./var/mysql:/var/lib/mysql
+
